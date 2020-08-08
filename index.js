@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const path = require("path");
+const { signup, signin, protect } = require("./controllers/auth");
+const userRouter = require("./routes/user");
+const linkRouter = require("./routes/links");
 
 const app = express();
 
@@ -30,10 +33,16 @@ connection.once("open", () => {
     console.log("MongoDB database connection established successfully");
 });
 
+app.post("/signup", signup);
+app.post("/signin", signin);
+// app.use("/api", protect);
+app.use("/api/user", userRouter);
+app.use("./api/links", linkRouter);
+
 app.get("/", (req, res) => {
     res.json({ message: "API Working" });
 });
 
 app.listen(PORT, (req, res) => {
-    console.log(`Server is running at ${PORT}`);
+    console.log(`Server is running at http://localhost:${PORT}`);
 });
