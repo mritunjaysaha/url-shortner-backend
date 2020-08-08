@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const path = require("path");
-const { signup, signin, protect } = require("./controllers/auth");
+const { signup, signin, signout, protect } = require("./controllers/auth");
 const userRouter = require("./routes/user");
 const linkRouter = require("./routes/links");
 
@@ -35,9 +35,10 @@ connection.once("open", () => {
 
 app.post("/signup", signup);
 app.post("/signin", signin);
+app.post("/signout", signout);
 // app.use("/api", protect);
 app.use("/api/user", userRouter);
-app.use("./api/links", linkRouter);
+app.use("/api/links", linkRouter);
 
 app.get("/", (req, res) => {
     res.json({ message: "API Working" });

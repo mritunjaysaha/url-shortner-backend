@@ -68,6 +68,11 @@ const signin = async (req, res) => {
     }
 };
 
+const signout = async (req, res) => {
+    res.clearCookie("token");
+    res.json({ user: { username: "" }, success: true });
+};
+
 const protect = async (req, res, next) => {
     const bearer = req.headers.authorization;
 
@@ -99,4 +104,4 @@ const protect = async (req, res, next) => {
     next();
 };
 
-module.exports = { newToken, verifyToken, signup, signin, protect };
+module.exports = { newToken, verifyToken, signup, signin, signout, protect };
