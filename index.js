@@ -36,7 +36,7 @@ connection.once("open", () => {
 
 app.post("/signup", signup);
 app.post("/signin", signin);
-app.post("/signout", signout);
+app.get("/signout", signout);
 // app.use("/api", protect);
 app.use("/api/user", userRouter);
 app.use("/api/links", linkRouter);

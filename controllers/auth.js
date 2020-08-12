@@ -92,7 +92,12 @@ const signin = async (req, res) => {
 
 const signout = async (req, res) => {
     res.clearCookie("token");
-    res.json({ user: { username: "" }, success: true });
+    res.json({
+        message: {
+            msgBody: "Successfully logged out",
+            msgError: false,
+        },
+    });
 };
 
 const protect = async (req, res, next) => {
