@@ -21,15 +21,37 @@ const verifyToken = (token) => {
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log("signup", email, password);
     if (!email || !password) {
         return res.status(400).send({ message: "need email and password" });
     }
 
     try {
-        const user = await User.create(req.body);
-        const token = newToken(user);
-        return res.status(201).send({ token });
+        User.findOne({ email }, (err, user) => {
+            if (err) {
+                res.status(500).json({
+                    message: { msgBody: "Error has occured", msgError: true },
+                });
+            }
+            if (user) {
+                res.status(400).json({
+                    message: {
+                        msgBody: "Username is already taken",
+                        msgError: true,
+                    },
+                });
+            } else {
+                const user = User.create(req.body);
+                const token = newToken(user);
+                return res.status(201).send({
+                    message: {
+                        msgBody: "Account created successfully",
+                        msgError: false,
+                    },
+                    token,
+                });
+            }
+        });
     } catch (e) {
         return res.status(500).end();
     }
@@ -37,7 +59,7 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log(email, password, "here");
     if (!email || !password) {
         return res.status(400).send({ message: "need email and password" });
     }

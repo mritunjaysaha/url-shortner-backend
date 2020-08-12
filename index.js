@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const path = require("path");
+const cors = require("cors");
 const { signup, signin, signout, protect } = require("./controllers/auth");
 const userRouter = require("./routes/user");
 const linkRouter = require("./routes/links");
@@ -15,7 +16,7 @@ dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
-
+app.use(cors());
 app.use(express.static(path.join(__dirname, "client", "build")));
 
 const uri = process.env.MONGODB_URI || process.env.URI;
