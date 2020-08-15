@@ -59,12 +59,17 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email, password, "here");
+
     if (!email || !password) {
         return res.status(400).send({ message: "need email and password" });
     }
 
-    const invalid = { message: `Invalid ${email} and ${password} combination` };
+    const invalid = {
+        message: {
+            msgBody: `Invalid username and password combination`,
+            msgError: true,
+        },
+    };
 
     try {
         const user = await User.findOne({ email: email })
@@ -72,21 +77,26 @@ const signin = async (req, res) => {
             .exec();
 
         if (!user) {
-            return res.status(401).send(invalid);
+            return res.status(401).json(invalid);
         }
 
         const match = await user.checkPassword(password);
 
         if (!match) {
-            return res.status(401).send(invalid);
+            return res.status(401).json(invalid);
         }
 
         const token = newToken(user);
 
-        return res.status(201).send({ token });
+        return res
+            .status(201)
+            .json({
+                message: { msgBody: "Successfully logged in", msgErr: false },
+                token,
+            });
     } catch (e) {
         console.log(e);
-        res.status(500).end();
+        res.status(500).json();
     }
 };
 
